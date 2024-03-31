@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping
     public User addUser(@RequestBody @Valid User user) {
         log.info("Получен запрос POST /users");
-        if(UserValidator.validate(user)) {
+        if (UserValidator.validate(user)) {
             userStorage.addUser(user);
             log.info("Запрос успешно обработан");
             return user;
