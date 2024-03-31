@@ -13,6 +13,13 @@ public class Item {
     String name;
     String description;
     boolean available;
-    User owner;
+    int ownerId;
     ItemRequest request;
+
+    public Item(String name, String description, boolean available, int ownerId) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.ownerId = ownerId;
+    }
 }

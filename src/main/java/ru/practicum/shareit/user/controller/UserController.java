@@ -7,6 +7,7 @@ import ru.practicum.shareit.user.UserValidator;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class UserController {
     private UserStorage userStorage;
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public User addUser(@RequestBody @Valid User user) {
         log.info("Получен запрос POST /users");
         if(UserValidator.validate(user)) {
             userStorage.addUser(user);

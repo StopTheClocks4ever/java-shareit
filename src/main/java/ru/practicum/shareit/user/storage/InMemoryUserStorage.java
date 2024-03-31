@@ -60,6 +60,11 @@ public class InMemoryUserStorage implements UserStorage {
         return userStorage.get(userId);
     }
 
+    @Override
+    public Map<Integer, User> getUserMap() {
+        return userStorage;
+    }
+
     private int generateNewId() {
         return ++userId;
     }
