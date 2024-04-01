@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserValidator;
