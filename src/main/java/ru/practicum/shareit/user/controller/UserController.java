@@ -3,7 +3,9 @@ package ru.practicum.shareit.user.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserValidator;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
@@ -18,22 +20,25 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    @Autowired
     private UserStorage userStorage;
 
+    public UserController(UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
+
     @PostMapping
-    public User addUser(@RequestBody @Valid User user) {
+    public UserDto addUser(@RequestBody @Valid User user) {
         log.info("Получен запрос POST /users");
         if (UserValidator.validate(user)) {
             userStorage.addUser(user);
             log.info("Запрос успешно обработан");
-            return user;
+            return UserMapper.toUserDto(user);
         }
-        return user;
+        return UserMapper.toUserDto(user);
     }
 
     @PatchMapping("/{userId}")
-    public User patchUser(@RequestBody User user, @PathVariable int userId) {
+    public UserDto patchUser(@RequestBody User user, @PathVariable int userId) {
         log.info("Получен запрос PATCH /users/{userId}");
         userStorage.updateUser(user, userId);
         return userStorage.getUserById(userId);
@@ -46,13 +51,13 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         log.info("Получен запрос GET /users");
         return userStorage.getAllUsers();
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable int userId) {
+    public UserDto getUserById(@PathVariable int userId) {
         log.info("Получен запрос GET /users/{userId}");
         return userStorage.getUserById(userId);
     }

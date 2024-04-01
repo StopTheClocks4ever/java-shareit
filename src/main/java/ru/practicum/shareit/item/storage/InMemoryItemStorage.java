@@ -62,26 +62,28 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public List<Item> getUserItems(int ownerId) {
+    public List<ItemDto> getUserItems(int ownerId) {
         //List<ItemDto> userItems = new ArrayList<>();
         List<Item> allItems = new ArrayList<>(itemStorage.values());
-        List<Item> userItems = allItems
+        List<ItemDto> userItems = allItems
                 .stream()
                 .filter(i -> i.getOwnerId() == ownerId)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         return userItems;
     }
 
     @Override
-    public List<Item> getSearch(String text) {
+    public List<ItemDto> getSearch(String text) {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
         List<Item> allItems = new ArrayList<>(itemStorage.values());
-        List<Item> searchResult = allItems
+        List<ItemDto> searchResult = allItems
                 .stream()
                 .filter(Item::isAvailable)
                 .filter(i -> i.getName().toUpperCase().contains(text.toUpperCase()) || i.getDescription().toUpperCase().contains(text.toUpperCase()))
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         return searchResult;
     }

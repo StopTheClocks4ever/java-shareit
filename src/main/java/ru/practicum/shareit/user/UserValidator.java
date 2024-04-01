@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
@@ -33,7 +34,7 @@ public class UserValidator {
 
     private boolean duplicateEmailValidation(User user) {
         List<String> emails = new ArrayList<>();
-        for (User u:userStorage.getAllUsers()) {
+        for (UserDto u:userStorage.getAllUsers()) {
             emails.add(u.getEmail());
         }
         return emails.contains(user.getEmail());

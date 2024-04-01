@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.storage;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exceptions.DuplicateEmailException;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -17,17 +20,17 @@ public class InMemoryUserStorage implements UserStorage {
     private int userId = 0;
 
     @Override
-    public User addUser(User user) {
+    public UserDto addUser(User user) {
         if (isUserDuplicated(user.getEmail())) {
             throw new DuplicateEmailException("Пользователь с такой почтой уже существует.");
         }
         user.setId(generateNewId());
         userStorage.put(user.getId(), user);
-        return user;
+        return UserMapper.toUserDto(user);
     }
 
     @Override
-    public User updateUser(User user, int userId) {
+    public UserDto updateUser(User user, int userId) {
         User existedUser = userStorage.get(userId);
         if (user.getEmail() != null && !user.getEmail().contains("@")) {
             throw new ValidationException("Введен неверный адрес электронной почты.");
@@ -42,7 +45,7 @@ public class InMemoryUserStorage implements UserStorage {
             existedUser.setName(user.getName());
         }
         userStorage.put(userId, existedUser);
-        return existedUser;
+        return UserMapper.toUserDto(existedUser);
     }
 
     @Override
@@ -51,13 +54,18 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return new ArrayList<>(userStorage.values());
+    public List<UserDto> getAllUsers() {
+        List<User> allUsers = new ArrayList<>(userStorage.values());
+        List<UserDto> allUsersDto = allUsers
+                .stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
+        return allUsersDto;
     }
 
     @Override
-    public User getUserById(int userId) {
-        return userStorage.get(userId);
+    public UserDto getUserById(int userId) {
+        return UserMapper.toUserDto(userStorage.get(userId));
     }
 
     @Override

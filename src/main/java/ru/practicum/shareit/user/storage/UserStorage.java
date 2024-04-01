@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.storage;
 
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -7,15 +8,15 @@ import java.util.Map;
 
 public interface UserStorage {
 
-    User addUser(User user);
+    UserDto addUser(User user);
 
-    User updateUser(User user, int userId);
+    UserDto updateUser(User user, int userId);
 
     void deleteUser(int userId);
 
-    List<User> getAllUsers();
+    List<UserDto> getAllUsers();
 
-    User getUserById(int userId);
+    UserDto getUserById(int userId);
 
     Map<Integer, User> getUserMap();
 

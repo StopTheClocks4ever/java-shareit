@@ -8,14 +8,15 @@ import ru.practicum.shareit.request.ItemRequest;
  */
 @Data
 public class Item {
-    int id;
-    String name;
-    String description;
-    boolean available;
-    int ownerId;
-    ItemRequest request;
+    private int id;
+    private String name;
+    private String description;
+    private boolean available;
+    private int ownerId;
+    private ItemRequest request;
 
-    public Item(String name, String description, boolean available, int ownerId) {
+    public Item(int id, String name, String description, boolean available, int ownerId) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;

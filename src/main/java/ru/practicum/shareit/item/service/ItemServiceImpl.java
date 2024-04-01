@@ -30,12 +30,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getUserItems(int ownerId) {
+    public List<ItemDto> getUserItems(int ownerId) {
         return itemStorage.getUserItems(ownerId);
     }
 
     @Override
-    public List<Item> getSearch(String text) {
+    public List<ItemDto> getSearch(String text) {
         return itemStorage.getSearch(text);
     }
 }
