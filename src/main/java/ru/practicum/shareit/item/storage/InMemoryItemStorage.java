@@ -27,7 +27,7 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public Item addItem(ItemDto itemDto, int ownerId) {
-        if (isOwnerExists(ownerId)) {
+/*        if (isOwnerExists(ownerId)) {
             Item item = ItemMapper.toItem(itemDto, ownerId);
             item.setId(generateNewId());
             itemStorage.put(item.getId(), item);
@@ -35,13 +35,14 @@ public class InMemoryItemStorage implements ItemStorage {
         } else {
             throw new UserNotFoundException("Указанного владельца не существует");
         }
-
+*/
+        return null;
     }
 
     @Override
     public Item updateItem(ItemDto itemDto, int itemId, int ownerId) {
-        Item existedItem = getItemById(itemId);
-        if (existedItem.getOwnerId() != ownerId) {
+/*        Item existedItem = getItemById(itemId);
+        if (existedItem.getOwner().getId() != ownerId) {
             throw new IncorrectUserException("Неверный владелец");
         }
         if (itemDto.getName() != null) {
@@ -54,28 +55,37 @@ public class InMemoryItemStorage implements ItemStorage {
             existedItem.setAvailable(itemDto.getAvailable());
         }
         return existedItem;
+
+ */
+        return null;
     }
 
     @Override
     public Item getItemById(int itemId) {
-        return itemStorage.get(itemId);
+        /* return itemStorage.get(itemId);
+
+         */
+        return null;
     }
 
     @Override
     public List<ItemDto> getUserItems(int ownerId) {
-        //List<ItemDto> userItems = new ArrayList<>();
+/*        //List<ItemDto> userItems = new ArrayList<>();
         List<Item> allItems = new ArrayList<>(itemStorage.values());
         List<ItemDto> userItems = allItems
                 .stream()
-                .filter(i -> i.getOwnerId() == ownerId)
+                .filter(i -> i.getOwner().getId() == ownerId)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         return userItems;
+
+ */
+        return null;
     }
 
     @Override
     public List<ItemDto> getSearch(String text) {
-        if (text.isBlank()) {
+/*        if (text.isBlank()) {
             return new ArrayList<>();
         }
         List<Item> allItems = new ArrayList<>(itemStorage.values());
@@ -86,6 +96,9 @@ public class InMemoryItemStorage implements ItemStorage {
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         return searchResult;
+
+ */
+        return null;
     }
 
     private int generateNewId() {
