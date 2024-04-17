@@ -19,7 +19,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -84,9 +83,9 @@ public class BookingServiceImpl implements BookingService {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId));
         }
         if (state.equalsIgnoreCase("current")) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(usersId, LocalDateTime.now(), LocalDateTime.now()));
+            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(usersId, LocalDateTime.now(), LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("**past**")) {
+        if (state.equalsIgnoreCase("past")) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(usersId, LocalDateTime.now()));
         }
         if (state.equalsIgnoreCase("future")) {
@@ -111,7 +110,7 @@ public class BookingServiceImpl implements BookingService {
         if (state.equalsIgnoreCase("current")) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId, LocalDateTime.now(), LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("**past**")) {
+        if (state.equalsIgnoreCase("past")) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, LocalDateTime.now()));
         }
         if (state.equalsIgnoreCase("future")) {

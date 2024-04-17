@@ -6,10 +6,11 @@ import ru.practicum.shareit.booking.dto.ShortBookingDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemDtoBookings {
+public class ItemDtoBookingsAndComments {
 
     private Integer id;
 
@@ -26,7 +27,8 @@ public class ItemDtoBookings {
 
     private ShortBookingDto nextBooking;
 
-    public ItemDtoBookings() {
+    private List<CommentDto> comments;
+    public ItemDtoBookingsAndComments() {
 
     }
 }
