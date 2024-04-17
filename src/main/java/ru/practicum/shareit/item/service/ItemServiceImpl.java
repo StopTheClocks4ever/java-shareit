@@ -92,7 +92,7 @@ public class ItemServiceImpl implements ItemService {
             }
 
             ShortBookingDto nextBooking;
-            if(bookingsAfter.size() == 0) {
+            if (bookingsAfter.size() == 0) {
                 nextBooking = null;
             } else {
                 Booking after = bookingsAfter.get(0);
@@ -146,7 +146,7 @@ public class ItemServiceImpl implements ItemService {
                 }
 
                 ShortBookingDto nextBooking;
-                if(bookingsAfter.size() == 0) {
+                if (bookingsAfter.size() == 0) {
                     nextBooking = null;
                 } else {
                     Booking after = bookingsAfter.get(0);

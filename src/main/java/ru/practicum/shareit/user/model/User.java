@@ -23,6 +23,7 @@ public class User {
     public User() {
 
     }
+
     public User(Integer id, String name, String email) {
         this.id = id;
         this.name = name;

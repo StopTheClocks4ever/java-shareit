@@ -27,10 +27,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(User user, int userId) {
         User existedUser = repository.findById(userId).get();
-        if(user.getName() != null) {
+        if (user.getName() != null) {
             existedUser.setName(user.getName());
         }
-        if(user.getEmail() != null) {
+        if (user.getEmail() != null) {
             existedUser.setEmail(user.getEmail());
         }
         return UserMapper.toUserDto(repository.save(existedUser));

@@ -28,6 +28,7 @@ public class ItemDtoBookingsAndComments {
     private ShortBookingDto nextBooking;
 
     private List<CommentDto> comments;
+
     public ItemDtoBookingsAndComments() {
 
     }
