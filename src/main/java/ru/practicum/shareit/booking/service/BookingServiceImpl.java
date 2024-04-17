@@ -20,6 +20,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -35,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
     public ResponseBookingDto addBooking(BookingDto bookingDto, int bookerId) {
         User booker = userRepository.findById(bookerId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new ItemNotFoundException("Указанной вещи не существует"));
-        if (booker.getId() == item.getOwner().getId()) {
+        if (Objects.equals(booker.getId(), item.getOwner().getId())) {
             throw new BookingNotFoundException("Пользователю нет необходимости бронировать свою вещь");
         }
         if (!item.isAvailable()) {
