@@ -1,8 +1,8 @@
 package ru.practicum.shareit.booking.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.State;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/bookings")
 public class BookingController {
 
-    @Autowired
     private BookingService bookingService;
 
     public BookingController(BookingService bookingService) {
@@ -41,13 +40,13 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<ResponseBookingDto> getAllUsersBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam (value = "state", defaultValue = "all", required = false) String state) {
+    public List<ResponseBookingDto> getAllUsersBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam (value = "state", defaultValue = "ALL", required = false) State state) {
         log.info("Получен запрос GET /bookings?state={state}");
         return bookingService.getAllUsersBookings(userId, state);
     }
 
     @GetMapping("/owner")
-    public List<ResponseBookingDto> getAllItemOwnerBookings(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestParam (value = "state", defaultValue = "all", required = false) String state) {
+    public List<ResponseBookingDto> getAllItemOwnerBookings(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestParam (value = "state", defaultValue = "ALL", required = false) State state) {
         log.info("Получен запрос GET /bookings/owner?state={state}");
         return bookingService.getAllItemOwnerBookings(ownerId, state);
     }

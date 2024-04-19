@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    @Autowired
     private ItemService itemService;
 
     public ItemController(ItemService itemService) {

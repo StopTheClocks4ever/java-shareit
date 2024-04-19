@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -8,8 +9,9 @@ import javax.persistence.*;
  * TODO Sprint add-controllers.
  */
 
-@Data
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
     @Id

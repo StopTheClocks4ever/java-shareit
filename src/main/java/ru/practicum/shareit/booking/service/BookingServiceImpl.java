@@ -1,9 +1,10 @@
 package ru.practicum.shareit.booking.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.State;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
 import ru.practicum.shareit.booking.exceptions.*;
@@ -23,14 +24,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
-    private BookingRepository bookingRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ItemRepository itemRepository;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
     @Override
     public ResponseBookingDto addBooking(BookingDto bookingDto, int bookerId) {
@@ -78,24 +77,24 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<ResponseBookingDto> getAllUsersBookings(int usersId, String state) {
+    public List<ResponseBookingDto> getAllUsersBookings(int usersId, State state) {
         User booker = userRepository.findById(usersId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (state.equalsIgnoreCase("all")) {
+        if (state.equals(State.ALL)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId));
         }
-        if (state.equalsIgnoreCase("current")) {
+        if (state.equals(State.CURRENT)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(usersId, LocalDateTime.now(), LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("past")) {
+        if (state.equals(State.PAST)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(usersId, LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("future")) {
+        if (state.equals(State.FUTURE)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(usersId, LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("waiting")) {
+        if (state.equals(State.WAITING)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.WAITING));
         }
-        if (state.equalsIgnoreCase("rejected")) {
+        if (state.equals(State.REJECTED)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.REJECTED));
         } else {
             throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
@@ -103,24 +102,24 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<ResponseBookingDto> getAllItemOwnerBookings(int ownerId, String state) {
+    public List<ResponseBookingDto> getAllItemOwnerBookings(int ownerId, State state) {
         User booker = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (state.equalsIgnoreCase("all")) {
+        if (state.equals(State.ALL)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId));
         }
-        if (state.equalsIgnoreCase("current")) {
+        if (state.equals(State.CURRENT)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId, LocalDateTime.now(), LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("past")) {
+        if (state.equals(State.PAST)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("future")) {
+        if (state.equals(State.FUTURE)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId, LocalDateTime.now()));
         }
-        if (state.equalsIgnoreCase("waiting")) {
+        if (state.equals(State.WAITING)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.WAITING));
         }
-        if (state.equalsIgnoreCase("rejected")) {
+        if (state.equals(State.REJECTED)) {
             return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.REJECTED));
         } else {
             throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
