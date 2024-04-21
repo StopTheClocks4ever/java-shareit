@@ -79,50 +79,41 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<ResponseBookingDto> getAllUsersBookings(int usersId, State state) {
         User booker = userRepository.findById(usersId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (state.equals(State.ALL)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId));
-        }
-        if (state.equals(State.CURRENT)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(usersId, LocalDateTime.now(), LocalDateTime.now()));
-        }
-        if (state.equals(State.PAST)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(usersId, LocalDateTime.now()));
-        }
-        if (state.equals(State.FUTURE)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(usersId, LocalDateTime.now()));
-        }
-        if (state.equals(State.WAITING)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.WAITING));
-        }
-        if (state.equals(State.REJECTED)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.REJECTED));
-        } else {
-            throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
+        switch (state) {
+            case ALL:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId));
+            case CURRENT:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(usersId, LocalDateTime.now(), LocalDateTime.now()));
+            case PAST:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(usersId, LocalDateTime.now()));
+            case FUTURE:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(usersId, LocalDateTime.now()));
+            case WAITING:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.WAITING));
+            case REJECTED:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.REJECTED));
+            default:
+                throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 
     @Override
     public List<ResponseBookingDto> getAllItemOwnerBookings(int ownerId, State state) {
         User booker = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (state.equals(State.ALL)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId));
-        }
-        if (state.equals(State.CURRENT)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId, LocalDateTime.now(), LocalDateTime.now()));
-        }
-        if (state.equals(State.PAST)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, LocalDateTime.now()));
-        }
-        if (state.equals(State.FUTURE)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId, LocalDateTime.now()));
-        }
-        if (state.equals(State.WAITING)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.WAITING));
-        }
-        if (state.equals(State.REJECTED)) {
-            return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.REJECTED));
-        } else {
-            throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
+        switch (state) {
+            case ALL:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId));
+            case CURRENT:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId, LocalDateTime.now(), LocalDateTime.now()));
+            case PAST:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, LocalDateTime.now()));
+            case FUTURE:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId, LocalDateTime.now()));
+            case WAITING:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.WAITING));
+            case REJECTED:
+                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.REJECTED));
+            default: throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 

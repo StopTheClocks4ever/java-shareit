@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
 
         if (existedItem.getOwner().getId() == ownerId) {
             ShortBookingDto lastBooking;
-            if (bookingsBefore.size() == 0) {
+            if (bookingsBefore.isEmpty()) {
                 lastBooking = null;
             } else {
                 Booking before = bookingsBefore.get(bookingsBefore.size() - 1);
@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
             }
 
             ShortBookingDto nextBooking;
-            if (bookingsAfter.size() == 0) {
+            if (bookingsAfter.isEmpty()) {
                 nextBooking = null;
             } else {
                 Booking after = bookingsAfter.get(0);
@@ -119,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDtoBookingsAndComments> getUserItems(int ownerId) {
         List<Item> userItems = itemRepository.findByOwnerId(ownerId);
         List<ItemDtoBookingsAndComments> resultList = new ArrayList<>();
-        if (userItems.size() != 0) {
+        if (!userItems.isEmpty()) {
             for (Item item : userItems) {
                 ItemDtoBookingsAndComments itemDtoBookingsAndComments = new ItemDtoBookingsAndComments();
 
@@ -130,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
                 List<CommentDto> commentDtoList = CommentMapper.listToCommentDto(commentList);
 
                 ShortBookingDto lastBooking;
-                if (bookingsBefore.size() == 0) {
+                if (bookingsBefore.isEmpty()) {
                     lastBooking = null;
                 } else {
                     Booking before = bookingsBefore.get(bookingsBefore.size() - 1);
@@ -140,7 +140,7 @@ public class ItemServiceImpl implements ItemService {
                 }
 
                 ShortBookingDto nextBooking;
-                if (bookingsAfter.size() == 0) {
+                if (bookingsAfter.isEmpty()) {
                     nextBooking = null;
                 } else {
                     Booking after = bookingsAfter.get(0);
