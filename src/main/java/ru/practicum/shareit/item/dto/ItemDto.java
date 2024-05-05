@@ -27,5 +27,6 @@ public class ItemDto {
     private Boolean available;
 
     int ownerId;
-    private Integer request;
+
+    private Integer requestId;
 }

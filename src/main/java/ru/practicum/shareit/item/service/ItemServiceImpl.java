@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.ShortBookingDto;
@@ -17,6 +18,10 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.exception.PaginationException;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
@@ -33,6 +38,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
@@ -40,8 +46,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto addItem(ItemDto itemDto, int ownerId) {
         User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        Item item = ItemMapper.toItem(itemDto, user);
-        return ItemMapper.toItemDto(itemRepository.save(item));
+        if (itemDto.getRequestId() == null) {
+            Item item = ItemMapper.toItem(itemDto, user);
+            return ItemMapper.toItemDto(itemRepository.save(item));
+        } else {
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(() -> new RequestNotFoundException("Указанного запроса не существует"));
+            Item item = ItemMapper.toItem(itemDto, user, itemRequest);
+            return ItemMapper.toItemDto(itemRepository.save(item));
+        }
     }
 
     @Override
@@ -116,8 +128,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoBookingsAndComments> getUserItems(int ownerId) {
-        List<Item> userItems = itemRepository.findByOwnerId(ownerId);
+    public List<ItemDtoBookingsAndComments> getUserItems(int ownerId, Integer from, Integer size) {
+        if (from < 0 || size <= 0) {
+            throw new PaginationException("Параметры пагинации заданы неверно");
+        }
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        List<Item> userItems = itemRepository.findByOwnerId(ownerId, page);
         List<ItemDtoBookingsAndComments> resultList = new ArrayList<>();
         if (!userItems.isEmpty()) {
             for (Item item : userItems) {
@@ -165,11 +181,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getSearch(String text) {
+    public List<ItemDto> getSearch(String text, Integer from, Integer size) {
+        if (from < 0 || size <= 0) {
+            throw new PaginationException("Параметры пагинации заданы неверно");
+        }
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        List<Item> searchedItem = itemRepository.findAllByNameContainingIgnoreCaseAndAvailableTrueOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text);
+        List<Item> searchedItem = itemRepository.findAllByNameContainingIgnoreCaseAndAvailableTrueOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text, page);
         return ItemMapper.listToItemDto(searchedItem);
     }
 

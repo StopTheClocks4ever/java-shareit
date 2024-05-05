@@ -1,5 +1,6 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.shareit.user.model.User;
 
@@ -11,15 +12,20 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "requests")
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
     @Column(name = "description", nullable = false)
-    String description;
+    private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
-    User requester;
-    LocalDateTime created;
+    private User requester;
+    private LocalDateTime created;
+
+    public ItemRequest() {
+
+    }
 }

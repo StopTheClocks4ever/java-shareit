@@ -15,6 +15,7 @@ import ru.practicum.shareit.booking.exceptions.UnsupportedStatusException;
 import ru.practicum.shareit.item.exception.IncorrectUserException;
 import ru.practicum.shareit.item.exception.ItemIsNotAvailableException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.user.exceptions.DuplicateEmailException;
 import ru.practicum.shareit.user.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.exceptions.ValidationException;
@@ -46,7 +47,7 @@ public class ErrorHandler {
         }
     }
 
-    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class, BookingNotFoundException.class, NotOwnerAndNotBookerException.class})
+    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class, BookingNotFoundException.class, NotOwnerAndNotBookerException.class, RequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         log.error(e.getMessage(), e);
