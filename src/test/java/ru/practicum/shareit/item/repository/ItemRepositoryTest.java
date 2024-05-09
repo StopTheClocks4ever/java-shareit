@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.repository;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

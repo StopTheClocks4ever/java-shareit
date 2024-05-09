@@ -1,12 +1,8 @@
 package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 public class UserValidator {
