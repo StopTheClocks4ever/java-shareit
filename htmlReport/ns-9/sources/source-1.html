@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ItemController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemController (ru.practicum.shareit.item.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item.controller;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import ru.practicum.shareit.item.dto.CommentDto;
+&nbsp;import ru.practicum.shareit.item.dto.ItemDto;
+&nbsp;import ru.practicum.shareit.item.dto.ItemDtoBookingsAndComments;
+&nbsp;import ru.practicum.shareit.item.service.ItemService;
+&nbsp;
+&nbsp;import javax.validation.Valid;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@RequiredArgsConstructor
+&nbsp;@RequestMapping(&quot;/items&quot;)
+&nbsp;public class ItemController {
+&nbsp;
+&nbsp;    private final ItemService itemService;
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    public ItemDto addItem(@RequestBody @Valid ItemDto itemDto, @RequestHeader(&quot;X-Sharer-User-Id&quot;) int ownerId) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос POST /items&quot;);</b>
+<b class="fc">&nbsp;        return itemService.addItem(itemDto, ownerId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/{itemId}&quot;)
+&nbsp;    public ItemDto patchItem(@RequestBody ItemDto itemDto, @PathVariable int itemId, @RequestHeader(&quot;X-Sharer-User-Id&quot;) int ownerId) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос PATCH /items/{itemId}&quot;);</b>
+<b class="fc">&nbsp;        return itemService.updateItem(itemDto, itemId, ownerId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{itemId}&quot;)
+&nbsp;    public ItemDtoBookingsAndComments getItemById(@RequestHeader(&quot;X-Sharer-User-Id&quot;) int ownerId, @PathVariable int itemId) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос GET /items/{itemId}&quot;);</b>
+<b class="fc">&nbsp;        return itemService.getItemById(ownerId, itemId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    public List&lt;ItemDtoBookingsAndComments&gt; getUserItems(@RequestHeader(&quot;X-Sharer-User-Id&quot;) int ownerId,
+&nbsp;                                                         @RequestParam (value = &quot;from&quot;, defaultValue = &quot;0&quot;, required = false) Integer from,
+&nbsp;                                                         @RequestParam (value = &quot;size&quot;, defaultValue = &quot;10&quot;,required = false) Integer size) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос GET /items&quot;);</b>
+<b class="fc">&nbsp;        return itemService.getUserItems(ownerId, from, size);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/search&quot;)
+&nbsp;    public List&lt;ItemDto&gt; getSearch(@RequestParam(value = &quot;text&quot;) String text,
+&nbsp;                                   @RequestParam (value = &quot;from&quot;, defaultValue = &quot;0&quot;, required = false) Integer from,
+&nbsp;                                   @RequestParam (value = &quot;size&quot;, defaultValue = &quot;10&quot;,required = false) Integer size) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос GET /search&quot;);</b>
+<b class="fc">&nbsp;        return itemService.getSearch(text, from, size);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/{itemId}/comment&quot;)
+&nbsp;    public CommentDto addComment(@RequestBody @Valid CommentDto commentDto, @PathVariable int itemId, @RequestHeader(&quot;X-Sharer-User-Id&quot;) int authorId) {
+<b class="fc">&nbsp;        log.info(&quot;Получен запрос POST /items&quot;);</b>
+<b class="fc">&nbsp;        return itemService.addComment(commentDto, itemId, authorId);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-09 13:49</div>
+</div>
+</body>
+</html>

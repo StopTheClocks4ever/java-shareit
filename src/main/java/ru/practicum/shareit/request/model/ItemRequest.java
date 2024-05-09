@@ -28,4 +28,10 @@ public class ItemRequest {
     public ItemRequest() {
 
     }
+
+    public ItemRequest(String description, User user, LocalDateTime created) {
+        this.description = description;
+        this.requester = user;
+        this.created = created;
+    }
 }

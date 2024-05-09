@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.UserValidator;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -25,7 +24,6 @@ public class UserController {
     @PostMapping
     public UserDto addUser(@RequestBody @Valid User user) {
         log.info("Получен запрос POST /users");
-        UserValidator.validate(user);
         return userService.addUser(user);
     }
 

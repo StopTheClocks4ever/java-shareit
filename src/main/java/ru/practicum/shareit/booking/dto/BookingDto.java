@@ -25,4 +25,8 @@ public class BookingDto {
     private Integer itemId;
     private Integer bookerId;
     private BookingStatus status;
+
+    public BookingDto() {
+
+    }
 }

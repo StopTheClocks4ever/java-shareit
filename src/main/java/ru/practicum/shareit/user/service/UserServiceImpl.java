@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.UserValidator;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(User user) {
+        UserValidator.validate(user);
         return UserMapper.toUserDto(repository.save(user));
     }
 
@@ -56,10 +58,5 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UserNotFoundException("Такого пользователя не существует");
         }
-    }
-
-    @Override
-    public Map<Integer, User> getUserMap() {
-        return null;
     }
 }

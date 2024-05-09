@@ -22,6 +22,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -99,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED:
                 return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.REJECTED, page));
             default:
-                throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
+                return new ArrayList<>();
         }
     }
 
@@ -123,7 +124,8 @@ public class BookingServiceImpl implements BookingService {
                 return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.WAITING, page));
             case REJECTED:
                 return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.REJECTED, page));
-            default: throw new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS");
+            default:
+                return new ArrayList<>();
         }
     }
 

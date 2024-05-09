@@ -17,7 +17,4 @@ public interface UserService {
     List<UserDto> getAllUsers();
 
     UserDto getUserById(int userId);
-
-    Map<Integer, User> getUserMap();
-
 }

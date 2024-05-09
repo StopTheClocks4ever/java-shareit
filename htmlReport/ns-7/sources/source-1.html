@@ -1,0 +1,275 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BookingServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.booking.service</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingServiceImpl (ru.practicum.shareit.booking.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BookingServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96,7%
+  </span>
+  <span class="absValue">
+    (87/90)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BookingServiceImpl$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96,7%
+  </span>
+  <span class="absValue">
+    (89/92)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.booking.service;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.data.domain.PageRequest;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import ru.practicum.shareit.booking.BookingMapper;
+&nbsp;import ru.practicum.shareit.booking.BookingStatus;
+&nbsp;import ru.practicum.shareit.booking.State;
+&nbsp;import ru.practicum.shareit.booking.dto.BookingDto;
+&nbsp;import ru.practicum.shareit.booking.dto.ResponseBookingDto;
+&nbsp;import ru.practicum.shareit.booking.exceptions.*;
+&nbsp;import ru.practicum.shareit.booking.model.Booking;
+&nbsp;import ru.practicum.shareit.booking.repository.BookingRepository;
+&nbsp;import ru.practicum.shareit.item.exception.ItemIsNotAvailableException;
+&nbsp;import ru.practicum.shareit.item.exception.ItemNotFoundException;
+&nbsp;import ru.practicum.shareit.item.model.Item;
+&nbsp;import ru.practicum.shareit.item.repository.ItemRepository;
+&nbsp;import ru.practicum.shareit.request.exception.PaginationException;
+&nbsp;import ru.practicum.shareit.user.exceptions.UserNotFoundException;
+&nbsp;import ru.practicum.shareit.user.exceptions.ValidationException;
+&nbsp;import ru.practicum.shareit.user.model.User;
+&nbsp;import ru.practicum.shareit.user.repository.UserRepository;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;@Service
+&nbsp;@RequiredArgsConstructor
+&nbsp;public class BookingServiceImpl implements BookingService {
+&nbsp;
+&nbsp;    private final BookingRepository bookingRepository;
+&nbsp;    private final UserRepository userRepository;
+&nbsp;    private final ItemRepository itemRepository;
+&nbsp;
+&nbsp;    @Override
+<b class="fc">&nbsp;    public ResponseBookingDto addBooking(BookingDto bookingDto, int bookerId) {</b>
+<b class="fc">&nbsp;        User booker = userRepository.findById(bookerId).orElseThrow(() -&gt; new UserNotFoundException(&quot;Указанного пользователя не существует&quot;));</b>
+<b class="fc">&nbsp;        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -&gt; new ItemNotFoundException(&quot;Указанной вещи не существует&quot;));</b>
+<b class="fc">&nbsp;        if (Objects.equals(booker.getId(), item.getOwner().getId())) {</b>
+<b class="fc">&nbsp;            throw new BookingNotFoundException(&quot;Пользователю нет необходимости бронировать свою вещь&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (!item.isAvailable()) {</b>
+<b class="fc">&nbsp;            throw new ItemIsNotAvailableException(&quot;Вещь уже забронирована&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        isTimeCorrect(bookingDto);</b>
+<b class="fc">&nbsp;        Booking booking = BookingMapper.toBooking(bookingDto, item, booker);</b>
+<b class="fc">&nbsp;        return BookingMapper.toResponseBookingDto(bookingRepository.save(booking));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+<b class="fc">&nbsp;    public ResponseBookingDto patchBooking(int ownerId, int bookingId, boolean isApproved) {</b>
+<b class="fc">&nbsp;        Booking existedBooking = bookingRepository.findById(bookingId).orElseThrow(() -&gt; new BookingNotFoundException(&quot;Такого бронирования не существует&quot;));</b>
+<b class="fc">&nbsp;        if (existedBooking.getBooker().getId() == ownerId) {</b>
+<b class="fc">&nbsp;            throw new UserNotFoundException(&quot;Наглый букер. Ты не сможешь обыграть мою систему)&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (existedBooking.getItem().getOwner().getId() != ownerId) {</b>
+<b class="fc">&nbsp;            throw new IncorrectUserException(&quot;Указанный пользователь не имеет прав изменять статус бронирования&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (existedBooking.getStatus().equals(BookingStatus.APPROVED)) {</b>
+<b class="fc">&nbsp;            throw new ValidationException(&quot;Заявка на бронирование уже одобрена&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (isApproved) {</b>
+<b class="fc">&nbsp;            existedBooking.setStatus(BookingStatus.APPROVED);</b>
+<b class="fc">&nbsp;        } else {</b>
+<b class="fc">&nbsp;            existedBooking.setStatus(BookingStatus.REJECTED);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return BookingMapper.toResponseBookingDto(bookingRepository.save(existedBooking));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+<b class="fc">&nbsp;    public ResponseBookingDto getBookingById(int requesterId, int bookingId) {</b>
+<b class="fc">&nbsp;        Booking existedBooking = bookingRepository.findById(bookingId).orElseThrow(() -&gt; new BookingNotFoundException(&quot;Такого бронирования не существует&quot;));</b>
+<b class="fc">&nbsp;        Item item = existedBooking.getItem();</b>
+<b class="fc">&nbsp;        if (existedBooking.getBooker().getId() != requesterId &amp;&amp; item.getOwner().getId() != requesterId) {</b>
+<b class="fc">&nbsp;            throw new NotOwnerAndNotBookerException(&quot;Указанный пользователь не владелец вещи и не арендатор&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return BookingMapper.toResponseBookingDto(existedBooking);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+<b class="fc">&nbsp;    public List&lt;ResponseBookingDto&gt; getAllUsersBookings(int usersId, State state, Integer from, Integer size) {</b>
+<b class="fc">&nbsp;        User booker = userRepository.findById(usersId).orElseThrow(() -&gt; new UserNotFoundException(&quot;Указанного пользователя не существует&quot;));</b>
+<b class="fc">&nbsp;        if (from &lt; 0 || size &lt;= 0) {</b>
+<b class="fc">&nbsp;            throw new PaginationException(&quot;Параметры пагинации заданы неверно&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        PageRequest page = PageRequest.of(from &gt; 0 ? from / size : 0, size);</b>
+<b class="fc">&nbsp;        switch (state) {</b>
+<b class="fc">&nbsp;            case ALL:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId, page));</b>
+<b class="fc">&nbsp;            case CURRENT:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(usersId, LocalDateTime.now(), LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case PAST:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(usersId, LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case FUTURE:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(usersId, LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case WAITING:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.WAITING, page));</b>
+<b class="fc">&nbsp;            case REJECTED:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(usersId, BookingStatus.REJECTED, page));</b>
+<b class="nc">&nbsp;            default:</b>
+<b class="nc">&nbsp;                return new ArrayList&lt;&gt;();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+<b class="fc">&nbsp;    public List&lt;ResponseBookingDto&gt; getAllItemOwnerBookings(int ownerId, State state, Integer from, Integer size) {</b>
+<b class="fc">&nbsp;        User booker = userRepository.findById(ownerId).orElseThrow(() -&gt; new UserNotFoundException(&quot;Указанного пользователя не существует&quot;));</b>
+<b class="fc">&nbsp;        if (from &lt; 0 || size &lt;= 0) {</b>
+<b class="fc">&nbsp;            throw new PaginationException(&quot;Параметры пагинации заданы неверно&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        PageRequest page = PageRequest.of(from &gt; 0 ? from / size : 0, size);</b>
+<b class="fc">&nbsp;        switch (state) {</b>
+<b class="fc">&nbsp;            case ALL:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId, page));</b>
+<b class="fc">&nbsp;            case CURRENT:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId, LocalDateTime.now(), LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case PAST:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case FUTURE:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId, LocalDateTime.now(), page));</b>
+<b class="fc">&nbsp;            case WAITING:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.WAITING, page));</b>
+<b class="fc">&nbsp;            case REJECTED:</b>
+<b class="fc">&nbsp;                return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingStatus.REJECTED, page));</b>
+&nbsp;            default:
+<b class="nc">&nbsp;                return new ArrayList&lt;&gt;();</b>
+&nbsp;        }
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    private void isTimeCorrect(BookingDto bookingDto) {</b>
+<b class="fc">&nbsp;        if (bookingDto.getEnd().isBefore(LocalDateTime.now())) {</b>
+<b class="fc">&nbsp;            throw new IncorrectBookingTimeException(&quot;Время окончания бронирования не указано или указано неверно&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (bookingDto.getStart().isBefore(LocalDateTime.now())) {</b>
+<b class="fc">&nbsp;            throw new IncorrectBookingTimeException(&quot;Время начала бронирования не указано или указано неверно&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (bookingDto.getStart().isEqual(bookingDto.getEnd())) {</b>
+<b class="fc">&nbsp;            throw new IncorrectBookingTimeException(&quot;Время начала бронирования не может равняться времени окончания бронирования&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {</b>
+<b class="fc">&nbsp;            throw new IncorrectBookingTimeException(&quot;Время начала бронирования не может быть позже времени окончания бронирования&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-09 13:49</div>
+</div>
+</body>
+</html>
