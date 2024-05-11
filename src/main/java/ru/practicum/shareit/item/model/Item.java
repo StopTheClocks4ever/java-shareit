@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -33,6 +33,15 @@ public class Item {
         this.description = description;
         this.available = available;
         this.owner = owner;
+    }
+
+    public Item(Integer id, String name, String description, boolean available, User owner, ItemRequest itemRequest) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.owner = owner;
+        this.request = itemRequest;
     }
 
     public Item() {

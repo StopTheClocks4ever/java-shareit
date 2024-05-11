@@ -26,6 +26,11 @@ public class ItemDto {
     @NotNull
     private Boolean available;
 
-    int ownerId;
-    private Integer request;
+    private int ownerId;
+
+    private Integer requestId;
+
+    public ItemDto() {
+
+    }
 }

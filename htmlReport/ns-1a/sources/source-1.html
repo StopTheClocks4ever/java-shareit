@@ -1,0 +1,115 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BookingRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.booking.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingRepository (ru.practicum.shareit.booking.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$aaT2RVDD</td>
+  </tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$aaT2RVDD$auxiliary$dzfu5fEf</td>
+  </tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$aaT2RVDD$auxiliary$h3LTzb0Z</td>
+  </tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$aaT2RVDD$auxiliary$IsGq7q2D</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.booking.repository;
+&nbsp;
+&nbsp;import org.springframework.data.domain.PageRequest;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import ru.practicum.shareit.booking.BookingStatus;
+&nbsp;import ru.practicum.shareit.booking.model.Booking;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface BookingRepository extends JpaRepository&lt;Booking, Integer&gt; {
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByBookerIdOrderByStartDesc(int userId, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByBookerIdAndStartBeforeAndEndAfterOrderByIdAsc(int userId, LocalDateTime now, LocalDateTime now1, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByBookerIdAndEndBeforeOrderByStartDesc(int userId, LocalDateTime now, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByBookerIdAndStartAfterOrderByStartDesc(int userId, LocalDateTime now, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByBookerIdAndStatusOrderByStartDesc(int userId, BookingStatus bookingStatus, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemOwnerIdOrderByStartDesc(int ownerId, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(int ownerId, LocalDateTime now, LocalDateTime now1, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(int userId, LocalDateTime now, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemOwnerIdAndStartAfterOrderByStartDesc(int userId, LocalDateTime now, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemOwnerIdAndStatusOrderByStartDesc(int userId, BookingStatus bookingStatus, PageRequest pageRequest);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemIdAndStatusNotOrderByStartAsc(int itemId, BookingStatus bookingStatus);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findAllByItemIdAndBookerIdAndEndBefore(int itemId, int bookerId, LocalDateTime now);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-09 13:49</div>
+</div>
+</body>
+</html>

@@ -1,20 +1,11 @@
 package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 public class UserValidator {
-
-    @Autowired
-    private UserStorage userStorage;
 
     public static boolean validate(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
@@ -30,13 +21,5 @@ public class UserValidator {
             throw new ValidationException("Имя пользователя не может быть пустым.");
         }
         return true;
-    }
-
-    private boolean duplicateEmailValidation(User user) {
-        List<String> emails = new ArrayList<>();
-        for (UserDto u:userStorage.getAllUsers()) {
-            emails.add(u.getEmail());
-        }
-        return emails.contains(user.getEmail());
     }
 }

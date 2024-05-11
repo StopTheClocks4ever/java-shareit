@@ -38,14 +38,20 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<ResponseBookingDto> getAllUsersBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam (value = "state", defaultValue = "ALL", required = false) State state) {
+    public List<ResponseBookingDto> getAllUsersBookings(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                        @RequestParam (value = "state", defaultValue = "ALL", required = false) State state,
+                                                        @RequestParam (value = "from", defaultValue = "0", required = false) Integer from,
+                                                        @RequestParam (value = "size", defaultValue = "10", required = false) Integer size) {
         log.info("Получен запрос GET /bookings?state={state}");
-        return bookingService.getAllUsersBookings(userId, state);
+        return bookingService.getAllUsersBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<ResponseBookingDto> getAllItemOwnerBookings(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestParam (value = "state", defaultValue = "ALL", required = false) State state) {
+    public List<ResponseBookingDto> getAllItemOwnerBookings(@RequestHeader("X-Sharer-User-Id") int ownerId,
+                                                            @RequestParam (value = "state", defaultValue = "ALL", required = false) State state,
+                                                            @RequestParam (value = "from", defaultValue = "0", required = false) Integer from,
+                                                            @RequestParam (value = "size", defaultValue = "10", required = false) Integer size) {
         log.info("Получен запрос GET /bookings/owner?state={state}");
-        return bookingService.getAllItemOwnerBookings(ownerId, state);
+        return bookingService.getAllItemOwnerBookings(ownerId, state, from, size);
     }
 }
