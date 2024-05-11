@@ -3,13 +3,13 @@ package ru.practicum.shareit.request.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.PageCreatorUtil;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDtoForRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.ItemRequestMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.exception.PaginationException;
 import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
@@ -72,10 +72,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllRequesterItemRequestsPagination(int requesterId, Integer from, Integer size) {
-        if (from < 0 || size <= 0) {
-            throw new PaginationException("Параметры пагинации заданы неверно");
-        }
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        PageRequest page = PageCreatorUtil.createPage(from, size);
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequesterIdNot(requesterId, page).getContent();
         if (!itemRequests.isEmpty()) {
             List<ItemRequestDto> itemRequestDtos = ItemRequestMapper.listToItemRequestDto(itemRequests);

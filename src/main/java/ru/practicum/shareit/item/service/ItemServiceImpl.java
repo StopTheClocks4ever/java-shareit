@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.PageCreatorUtil;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.ShortBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
@@ -18,7 +19,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.exception.PaginationException;
 import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
@@ -129,10 +129,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDtoBookingsAndComments> getUserItems(int ownerId, Integer from, Integer size) {
-        if (from < 0 || size <= 0) {
-            throw new PaginationException("Параметры пагинации заданы неверно");
-        }
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        PageRequest page = PageCreatorUtil.createPage(from, size);
         List<Item> userItems = itemRepository.findByOwnerId(ownerId, page);
         List<ItemDtoBookingsAndComments> resultList = new ArrayList<>();
         if (!userItems.isEmpty()) {
@@ -182,10 +179,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getSearch(String text, Integer from, Integer size) {
-        if (from < 0 || size <= 0) {
-            throw new PaginationException("Параметры пагинации заданы неверно");
-        }
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        PageRequest page = PageCreatorUtil.createPage(from, size);
         if (text.isEmpty()) {
             return new ArrayList<>();
         }

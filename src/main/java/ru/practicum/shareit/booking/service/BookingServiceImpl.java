@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.PageCreatorUtil;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.State;
@@ -15,7 +16,6 @@ import ru.practicum.shareit.item.exception.ItemIsNotAvailableException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.exception.PaginationException;
 import ru.practicum.shareit.user.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.exceptions.ValidationException;
 import ru.practicum.shareit.user.model.User;
@@ -82,10 +82,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<ResponseBookingDto> getAllUsersBookings(int usersId, State state, Integer from, Integer size) {
         User booker = userRepository.findById(usersId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (from < 0 || size <= 0) {
-            throw new PaginationException("Параметры пагинации заданы неверно");
-        }
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        PageRequest page = PageCreatorUtil.createPage(from, size);
         switch (state) {
             case ALL:
                 return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(usersId, page));
@@ -107,10 +104,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<ResponseBookingDto> getAllItemOwnerBookings(int ownerId, State state, Integer from, Integer size) {
         User booker = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("Указанного пользователя не существует"));
-        if (from < 0 || size <= 0) {
-            throw new PaginationException("Параметры пагинации заданы неверно");
-        }
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        PageRequest page = PageCreatorUtil.createPage(from, size);
         switch (state) {
             case ALL:
                 return BookingMapper.listToResponseBookingDto(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId, page));
