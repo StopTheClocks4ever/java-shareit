@@ -27,7 +27,7 @@ public class RequestController {
     }
 
     @GetMapping
-    private ResponseEntity<Object> getAllRequesterItemRequests(@RequestHeader("X-Sharer-User-Id") int requesterId) {
+    public ResponseEntity<Object> getAllRequesterItemRequests(@RequestHeader("X-Sharer-User-Id") int requesterId) {
         log.info("Get requests with userId = {}", requesterId);
         return requestClient.getItemRequests(requesterId);
     }
